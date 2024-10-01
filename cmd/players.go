@@ -10,27 +10,33 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var playersCmd = &cobra.Command{
-	Use:   "players <server-addr>",
-	Short: "List players",
-	Long:  "This query retrieves information about the players currently on the server.",
-	Args:  cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
-		server := args[0]
+func init() {
+	var playersCmd = &cobra.Command{
+		Use:   "players <server-addr>",
+		Short: "List players",
+		Long:  "This query retrieves information about the players currently on the server.",
+		Args:  cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			server := args[0]
 
-		slog.Debug("ListPlayers", "server-addr", server)
-		responseBytes := a2s_requests.GetBytes(server, a2s_requests.A2S_PLAYER_REQUEST)
-		response := a2s_requests.ParsePlayerResponse(responseBytes)
+			slog.Debug("ListPlayers", "server-addr", server)
+			responseBytes := a2s_requests.GetBytes(server, a2s_requests.A2S_PLAYER_REQUEST)
+			response := a2s_requests.ParsePlayerResponse(responseBytes)
 
-		sortBy, err := cmd.Flags().GetString("sort")
-		if err != nil {
-			slog.Error("Could not get sorting by value")
-			panic(err)
-		}
-		sort(response, sortBy)
+			sortBy, err := cmd.Flags().GetString("sort")
+			if err != nil {
+				slog.Error("Could not get sorting by value")
+				panic(err)
+			}
+			sort(response, sortBy)
 
-		a2s_requests.PrintPlayerResponse(response)
-	},
+			a2s_requests.PrintPlayerResponse(response)
+		},
+	}
+
+	rootCmd.AddCommand(playersCmd)
+
+	playersCmd.Flags().StringP("sort", "s", "score", "name, score or duration")
 }
 
 func sort(resp a2s_requests.A2S_PLAYER_RESPONSE, sortBy string) {
@@ -55,10 +61,4 @@ func cmpByDuration(a, b a2s_requests.A2S_PLAYER) int {
 }
 func cmpByName(a, b a2s_requests.A2S_PLAYER) int {
 	return cmp.Compare(b.Name, a.Name)
-}
-
-func init() {
-	rootCmd.AddCommand(playersCmd)
-
-	playersCmd.Flags().StringP("sort", "s", "score", "name, score or duration")
 }
