@@ -1,14 +1,15 @@
 package cmd
 
 import (
-	"cs_monitor/a2s_requests"
 	"github.com/spf13/cobra"
+	"vmon/a2s_requests"
 )
 
 // rulesCmd represents the rules command
 var rulesCmd = &cobra.Command{
 	Use:   "rules <server addr>",
 	Short: "Print server rules/config",
+	Long:  "Returns the server rules, or configuration variables in name/value pairs.",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		server := args[0]

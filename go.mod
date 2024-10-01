@@ -1,4 +1,4 @@
-module cs_monitor
+module vmon
 
 go 1.22.6
 

@@ -1,10 +1,10 @@
 package cmd
 
 import (
-	"cs_monitor/a2s_requests"
 	"fmt"
 	"github.com/spf13/cobra"
 	"time"
+	"vmon/a2s_requests"
 )
 
 // pingCmd represents the ping command
