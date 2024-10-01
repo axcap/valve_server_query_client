@@ -60,5 +60,5 @@ func cmpByName(a, b a2s_requests.A2S_PLAYER) int {
 func init() {
 	rootCmd.AddCommand(playersCmd)
 
-	playersCmd.Flags().StringP("sort", "s", "score", "")
+	playersCmd.Flags().StringP("sort", "s", "score", "name, score or duration")
 }
