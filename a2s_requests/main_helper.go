@@ -1,6 +1,7 @@
 package a2s_requests
 
 import (
+	"fmt"
 	"log"
 	"net"
 )
@@ -89,17 +90,17 @@ func readServerResponse(conn *net.UDPConn) []byte {
 	return buff
 }
 
-// func printHexArray(title string, array []byte) {
-// 	str := ""
-// 	str += fmt.Sprintf("%s: [", title)
-// 	for i, char := range array {
-// 		if i != len(array)-1 {
-// 			str += fmt.Sprintf("%02X ", char)
-// 		} else {
-// 			str += fmt.Sprintf("%02X", char)
-// 		}
-// 	}
-// 	str += fmt.Sprintln("]")
-//
-// 	log.Println(str)
-// }
+func printHexArray(title string, array []byte) {
+	str := ""
+	str += fmt.Sprintf("%s: [", title)
+	for i, char := range array {
+		if i != len(array)-1 {
+			str += fmt.Sprintf("%02X ", char)
+		} else {
+			str += fmt.Sprintf("%02X", char)
+		}
+	}
+	str += fmt.Sprintln("]")
+
+	log.Println(str)
+}

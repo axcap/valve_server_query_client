@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"log"
 	"math"
+	"os"
+	"text/tabwriter"
+	"time"
 )
 
 var A2S_PLAYER_REQUEST = []byte{0xFF, 0xFF, 0xFF, 0xFF, 'U', 0xFF, 0xFF, 0xFF, 0xFF}
@@ -24,7 +27,7 @@ type A2S_PLAYER_RESPONSE struct {
 	Players    []A2S_PLAYER
 }
 
-func parsePlayerResponse(array []byte) A2S_PLAYER_RESPONSE {
+func ParsePlayerResponse(array []byte) A2S_PLAYER_RESPONSE {
 	rv := A2S_PLAYER_RESPONSE{}
 
 	i := 4
@@ -56,19 +59,28 @@ func parsePlayerResponse(array []byte) A2S_PLAYER_RESPONSE {
 
 }
 
-func printPlayerResponse(resp A2S_PLAYER_RESPONSE) {
-	fmt.Printf("Header: %c %v\n", resp.Header, resp.Header == PLAYER_HEADER)
-	fmt.Printf("NumPlayers: %v\n", resp.NumPlayers)
-	fmt.Printf("Len(Players): %v\n", len(resp.Players))
+func PrintPlayerResponse(resp A2S_PLAYER_RESPONSE) {
+	// fmt.Fprintf(w, "Header: %c %v\n", resp.Header, resp.Header == PLAYER_HEADER)
+	// fmt.Fprintf(w, "NumPlayers: %v\n", resp.NumPlayers)
+	// fmt.Fprintf(w, "Len(Players): %v\n", len(resp.Players))
 
-	if int(resp.NumPlayers) > len(resp.Players) {
-		log.Panicln("Someone is connection to the server")
-	}
+	// if int(resp.NumPlayers) > len(resp.Players) {
+	// 	fmt.Println("Someone is connection to the server")
+	// }
+
 	if int(resp.NumPlayers) < len(resp.Players) {
 		log.Fatalln("Player count mismatch")
 	}
 
+	w := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
+	fmt.Fprintln(w, "Name\tScore\tDuration")
 	for _, player := range resp.Players {
-		log.Printf("%v\n", player)
+		durr := fmt.Sprintf("%.0fs", player.Duration)
+		duration, err := time.ParseDuration(durr)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Fprintf(w, "%s\t%d\t%v\n", player.Name, player.Score, duration)
 	}
+	w.Flush()
 }

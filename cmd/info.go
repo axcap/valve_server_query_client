@@ -7,14 +7,12 @@ import (
 
 // infoCmd represents the info command
 var infoCmd = &cobra.Command{
-	Use:   "info",
+	Use:   "info <server-addr>",
+	Args:  cobra.ExactArgs(1),
 	Short: "Get server information",
 	Long:  `Retrieves information about the server including, but not limited to: its name, the map currently being played, and the number of players.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		server, err := cmd.Flags().GetString("server")
-		if err != nil {
-			panic(err)
-		}
+		server := args[0]
 
 		response := a2s_requests.GetBytes(server, a2s_requests.A2S_INFO_REQUEST)
 		ptr := a2s_requests.ParseInfoResponse(response)
@@ -34,6 +32,4 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// infoCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	infoCmd.Flags().StringP("server", "s", "", "set server")
-	infoCmd.MarkFlagRequired("server")
 }
