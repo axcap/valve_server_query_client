@@ -20,12 +20,12 @@ func ParsePingResponse(array []byte) A2S_PING_RESPONSE {
 	i := 4
 	rv.Header, i = array[i], i+1
 	if rv.Header != _PING_HEADER {
-		log.Fatalf("Unrecognized header: '%c' (%02X), Expected: '%c' (%02X)\n", rv.Header, rv.Header, _PING_HEADER, _PING_HEADER)
+		log.Fatalf("Unrecognized header: '%c' (%02X), Expected: '%c' (%02X)\n",
+			rv.Header, rv.Header, _PING_HEADER, _PING_HEADER)
 	}
 	rv.Payload, i = getString(array, i)
 
 	return rv
-
 }
 
 func PrintPingResponse(resp A2S_PING_RESPONSE) {

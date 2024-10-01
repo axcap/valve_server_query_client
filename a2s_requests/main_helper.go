@@ -3,7 +3,9 @@ package a2s_requests
 import (
 	"fmt"
 	"log"
+	"log/slog"
 	"net"
+	"time"
 )
 
 /*
@@ -28,15 +30,19 @@ func GetBytes(server string, request []byte) []byte {
 		log.Fatalln(err)
 	}
 	defer conn.Close()
+	err = conn.SetReadDeadline(time.Now().Add(5 * time.Second))
+	if err != nil {
+		log.Fatalln("Could not set request timeout")
+	}
 
 request:
 	_, err = conn.Write(request)
 	if err != nil {
+		slog.Debug("Error during initial request", "error", err)
 		log.Fatalln(err)
 	}
 
 	response := readServerResponse(conn)
-
 	if response[4] == 'A' {
 		request = append(request[0:5], response[5:9]...)
 		goto request
@@ -60,12 +66,14 @@ func getString(array []byte, startIndex int) (string, int) {
 }
 
 func readServerResponse(conn *net.UDPConn) []byte {
+	slog.Debug("Entering readServerResponse")
 	const maxMessageSize = 1400
 
 	buff := make([]byte, maxMessageSize)
 	_, err := conn.Read(buff)
 	if err != nil {
-		log.Fatalln(err)
+		slog.Error("Error reading server response")
+		panic(err)
 	}
 
 	if buff[0] == 0xFE {
@@ -77,7 +85,8 @@ func readServerResponse(conn *net.UDPConn) []byte {
 			tmp := make([]byte, maxMessageSize)
 			n_read, err := conn.Read(tmp)
 			if err != nil {
-				log.Fatalln(err)
+				slog.Error("Could not read multipackage request")
+				panic(err)
 			}
 
 			packet = tmp[4+4]

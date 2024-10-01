@@ -2,17 +2,17 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
+	"log/slog"
 	"os"
 )
 
-// rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "vmon",
 	Short: "Query Valve servers",
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
+var Verbose bool
+
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
@@ -20,6 +20,14 @@ func Execute() {
 	}
 }
 
+func initConfig() {
+	if Verbose {
+		slog.SetLogLoggerLevel(slog.LevelDebug)
+	}
+}
+
 func init() {
+	cobra.OnInitialize(initConfig)
+	rootCmd.PersistentFlags().BoolVarP(&Verbose, "verbose", "v", false, "Verbose output")
 	rootCmd.SetHelpCommand(&cobra.Command{Hidden: true})
 }

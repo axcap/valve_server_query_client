@@ -7,7 +7,6 @@ import (
 	"vmon/a2s_requests"
 )
 
-// pingCmd represents the ping command
 var pingCmd = &cobra.Command{
 	Use:   "ping <server-addr>",
 	Short: "Get ping to the server",
