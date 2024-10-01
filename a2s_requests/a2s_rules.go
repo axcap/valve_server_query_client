@@ -1,4 +1,4 @@
-package main
+package a2s_requests
 
 import (
 	"fmt"

@@ -1,4 +1,4 @@
-package main
+package a2s_requests
 
 import (
 	"fmt"
@@ -29,6 +29,6 @@ func parsePingResponse(array []byte) A2S_PING_RESPONSE {
 }
 
 func printPingResponse(resp A2S_PING_RESPONSE) {
-	fmt.Printf("Header: %c %v\n", resp.Header, resp.Header == PLAYER_HEADER)
+	fmt.Printf("Header: %c %v\n", resp.Header, resp.Header == _PING_HEADER)
 	fmt.Printf("Payload: %v\n", resp.Payload)
 }

@@ -1,4 +1,4 @@
-package main
+package a2s_requests
 
 import (
 	"fmt"
@@ -28,21 +28,7 @@ type A2S_INFO_RESPONSE struct {
 var VacValues = []string{"unsecured", "secured"}
 var VisibilityValues = []string{"public", "private"}
 
-func getString(array []byte, startIndex int) (string, int) {
-	if startIndex >= len(array) {
-		return "", -1
-	}
-
-	for i := startIndex; i < len(array); i += 1 {
-		if array[i] == 0 {
-			return string(array[startIndex:i]), i + 1
-		}
-	}
-
-	return "", -1
-}
-
-func parseResponse(array []byte) A2S_INFO_RESPONSE {
+func ParseInfoResponse(array []byte) A2S_INFO_RESPONSE {
 	rv := A2S_INFO_RESPONSE{}
 
 	i := 4
@@ -65,7 +51,7 @@ func parseResponse(array []byte) A2S_INFO_RESPONSE {
 	return rv
 }
 
-func printResponse(resp A2S_INFO_RESPONSE) {
+func PrintInfoResponse(resp A2S_INFO_RESPONSE) {
 	fmt.Printf("Header: %c %v\n", resp.Header, resp.Header == 'I')
 	fmt.Printf("Protocol: %d\n", resp.Protocol)
 	fmt.Printf("Name: %v\n", resp.Name)
