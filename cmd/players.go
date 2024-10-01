@@ -33,7 +33,6 @@ func init() {
 			a2s_requests.PrintPlayerResponse(response)
 		},
 	}
-
 	rootCmd.AddCommand(playersCmd)
 
 	playersCmd.Flags().StringP("sort", "s", "score", "name, score or duration")
